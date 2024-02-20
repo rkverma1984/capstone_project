@@ -365,7 +365,7 @@ reference <- LoadH5Seurat(ref_file, assays = list("SCT" = "counts"), reductions 
 
 reference <- UpdateSeuratObject(reference) # UpdateSeuratObject is a function that updates a Seurat object to the current version of Seurat.
 
-# transfer cell type labels from reference to query. FindTransferAnchors is a function that finds anchors between two Seurat objects.
+# transfer cell-type labels from reference to query. FindTransferAnchors is a function that finds anchors between two Seurat objects.
 transfer_anchors <- FindTransferAnchors(
   reference = reference,
   query = filtered_lymph_sctransform,
@@ -399,7 +399,7 @@ head(filtered_lymph_sctransform@meta.data)
 
 #### ----------------------------------------------------------------------------------------
 
-#### Cluster the data using the combined RNA and ATAC data ####
+#### Clustering using the combined RNA and ATAC data ####
 FindClusters(filtered_lymph_sctransform, graph.name = "wsnn", algorithm = 3, resolution = 10, verbose = FALSE)
 
 saveRDS(filtered_lymph_sctransform, file="../results/filtered_lymph_sctransform_after_annotation_final.rds")
