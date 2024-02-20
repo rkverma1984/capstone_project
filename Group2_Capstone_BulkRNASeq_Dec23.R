@@ -33,7 +33,8 @@ genome(annotations) <- "hg38" #genome is a function that sets the genome of a GR
 #### ----------------------------------------------------------------------------------------
 
 #### set directory paths #####
-base_dir <- "/home/ravikumarv/OneDrive/capstone_project" 
+path_to_base_dir <- 'base path' #modify the base path
+base_dir <- paste0(path_to_base_dir, "/capstone_project")
 w_dir <- file.path(base_dir, "scripts")
 data_dir <- file.path(base_dir, "data")
 
