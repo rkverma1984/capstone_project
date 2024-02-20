@@ -2,14 +2,14 @@ library(Matrix) #Matrix is a package that provides classes for dense and sparse 
 library(Signac) #Signac is a package for the analysis of single-cell chromatin data.
 library(Seurat) #Seurat is a package designed for QC, analysis, and exploration of single-cell RNA-seq data.
 library(SeuratDisk) #SeuratDisk is a package that provides a disk-backed storage backend for Seurat objects.
-library(SeuratObject) #SeuratObject is a package that provides a class for storing
+library(SeuratObject) #SeuratObject is a package that provides a class for storing.
 library(tidyverse) #tidyverse is a collection of R packages designed for data science.
 library(janitor) #janitor is a package that provides a clean API for cleaning data.
 library(conflicted) #conflicted is a package that provides a conflict resolution system for R.
 library(scDblFinder) #scDblFinder is a package for identifying doublets in single-cell RNA-seq data.
 library(ggplot2) #ggplot2 is a system for declaratively creating graphics, based on The Grammar of Graphics.
 library(EnsDb.Hsapiens.v86) #EnsDb.Hsapiens.v86 is a Bioconductor package that provides the full genome annotation
-library(BSgenome.Hsapiens.UCSC.hg38) #BSgenome.Hsapiens.UCSC.hg38 is a Bioconductor package that provides the full genome
+library(BSgenome.Hsapiens.UCSC.hg38) #BSgenome.Hsapiens.UCSC.hg38 is a Bioconductor package that provides the full genome.
 library(BiocManager) #BiocManager is a package that provides a convenient way to install and update Bioconductor packages.
 library(BiocGenerics) #BiocGenerics provides S4 generic functions used in Bioconductor.
 library(ggforce) #ggforce is a package that extends ggplot2 to provide a wider range of functionality for visualizing data.
@@ -359,6 +359,7 @@ dim3
 #### ----------------------------------------------------------------------------------------
 
 #### Add cell annotations to the Seurat object
+# Note that this section is RAM intensive. Required RAM >16 Gbs
 
 ref_file <- file.path(data_dir, "pbmc_multimodal.h5seurat")
 reference <- LoadH5Seurat(ref_file, assays = list("SCT" = "counts"), reductions = 'spca') # load annotations
@@ -526,6 +527,7 @@ filtered_lymph_sctransform_with_motif <- readRDS("../results/filtered_lymph_sctr
 
 
 #### FindMarkers is a function that finds differentially accessible peaks between two groups of cells in a Seurat object. ####
+# Note that this step is time consuming and takes >30 mins to compute #
 da_peaks <- FindMarkers(
   object = filtered_lymph_sctransform_with_motif,
   ident.1 = 'B',  # B cells
