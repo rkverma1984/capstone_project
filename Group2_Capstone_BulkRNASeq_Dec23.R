@@ -462,6 +462,7 @@ dev.off()
 
 p5 <- VlnPlot(filtered_lymph_sctransform, features = to_plot)
 svg(filename = "../results/Bcell_markers_violin_plot.svg",  width = 12, height = 8)
+p5
 dev.off()
 
 
