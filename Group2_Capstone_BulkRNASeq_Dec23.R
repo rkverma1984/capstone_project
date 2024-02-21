@@ -271,7 +271,7 @@ filtered_lymph <- subset(
      nCount_peaks > 408 &
      
     nCount_RNA < 10000 &
-    nCount_RNA > 330 &
+    nCount_RNA > 330 
     
 #    nCount_ATAC < 50000 &
 #    nCount_ATAC > 783 & 
