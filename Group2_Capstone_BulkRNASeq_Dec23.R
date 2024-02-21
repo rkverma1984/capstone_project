@@ -392,10 +392,12 @@ transfer_anchors <- FindTransferAnchors(
 
 
 #### transfer data from a reference to a query using a set of anchors. ####
+# in the current version a very course-grained cell definations i.e. celltype.l1 are used.
+# use celltype.l2 or celltype.l3 to get finer annotations 
 predictions <- TransferData(
   anchorset = transfer_anchors,
   reference = reference,
-  refdata =  "celltype.l1",
+  refdata =  "celltype.l1", 
   weight.reduction = filtered_lymph_sctransform[['pca']],
   dims = 1:50
 )
