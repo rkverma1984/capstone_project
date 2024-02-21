@@ -15,7 +15,7 @@ library(BiocGenerics) #BiocGenerics provides S4 generic functions used in Biocon
 library(ggforce) #ggforce is a package that extends ggplot2 to provide a wider range of functionality for visualizing data.
 library(TFBSTools) #TFBSTools is an R package for the analysis of transcription factor binding site (TFBS) sequences.
 library(JASPAR2020) #JASPAR is the largest open-access database of curated and non-redundant transcription factor (TF) binding profiles from six different taxonomic groups.
-library(ArchR) #ArchR is a package for the analysis of single-cell chromatin data.
+#library(ArchR) #ArchR is a package for the analysis of single-cell chromatin data.
 library(ggseqlogo) #ggseqlogo is a package that provides a 'ggplot2' extension for drawing publication-ready sequence logos.
 
 ## Use dplyr::filter instead of stats::filter
@@ -113,7 +113,7 @@ p <- VlnPlot(
 
 svg(filename = "../results/violin_plots_rna_atac.svg",  width = 12, height = 5)
 p
-
+dev.off()
 
 saveRDS(lymph, file="../results/lymph_final.rds")
 fs::file_size("../results/lymph_final.rds")
@@ -149,7 +149,7 @@ p2 <- VlnPlot(
 
 svg(filename = "../results/violin_plots_rna_atac_filtered.svg",  width = 12, height = 5)
 p2
-
+dev.off()
 
 #### ----------------------------------------------------------------------------------------
 
@@ -169,7 +169,7 @@ head(peaks)
 
 blacklist_hg38_unified <- ArchR:::.getBlacklist("hg38") #getBlacklist is a function that retrieves the genomic blacklist for a specified genome.
 peaks_filtered <- keepStandardChromosomes(peaks, pruning.mode = "coarse") #remove peaks on nonstandard chromosomes from a GRanges object.
-peaks_filtered <- subsetByOverlaps(x = peaks_filtered, ranges = blacklist_hg38_unified, invert = TRUE) #remove not well defined (blacklisted) peaks from a GRanges object.
+#peaks_filtered <- subsetByOverlaps(x = peaks_filtered, ranges = blacklist_hg38_unified, invert = TRUE) #remove not well defined (blacklisted) peaks from a GRanges object.
 
 peaks_filtered
 
@@ -223,12 +223,15 @@ rm(filtered_lymph_sctransform)
 d1 <- DensityScatter(filtered_lymph, x = 'nCount_RNA', y = 'TSS.enrichment', log_x = TRUE, quantiles = TRUE)
 svg(filename = "../results/nCount_RNA_vs_TSS_enrichment.svg",  width = 8, height = 6)
 d1
+dev.off()
 
 
 #### plot nCount_peaks vs TSS.enrichment ####
 d2 <- DensityScatter(filtered_lymph, x = 'nCount_peaks', y = 'TSS.enrichment', log_x = TRUE, quantiles = TRUE)
 svg(filename = "../results/nCount_peaks_vs_TSS_enrichment.svg",  width = 8, height = 6)
 d2
+dev.off()
+
 
 filtered_lymph$high.tss <- ifelse(filtered_lymph$TSS.enrichment > 2.5, 'High', 'Low') #create a new column in the metadata of the Seurat object
 
@@ -236,12 +239,16 @@ DefaultAssay(filtered_lymph) <- "peaks"
 t1 <- TSSPlot(filtered_lymph, group.by = 'high.tss') + NoLegend() # TSSPlot is a function that plots the TSS enrichment for a Seurat object.
 svg(filename = "../results/TSS_plot.svg",  width = 10, height = 5)
 t1
+dev.off()
+
 
 DefaultAssay(filtered_lymph) <- "peaks"
 filtered_lymph$nucleosome_group <- ifelse(filtered_lymph$nucleosome_signal > 0.6, 'NS > 0.6', 'NS < 0.6') # create a new column in the metadata of the Seurat object
 t2 <- FragmentHistogram(object = filtered_lymph, group.by = 'nucleosome_group') # plot a histogram of the fragment length distribution for a Seurat object.
 svg(filename = "../results/fragment_histogram.svg",  width = 10, height = 5)
 t2
+dev.off()
+
 
 ##### plot violin plots for filtered data #####
 p3 <- VlnPlot(
@@ -253,6 +260,8 @@ p3 <- VlnPlot(
 
 svg(filename = "../results/violin_plots_rna_peaks.svg",  width = 12, height = 5)
 p3
+dev.off()
+
 
 
 #### additional filtering of data to filter out low quality cells
@@ -285,16 +294,18 @@ p3 <- VlnPlot(
 
 svg(filename = "../results/violin_plots_rna_peaks_filtered.svg",  width = 12, height = 5)
 p3
-
+dev.off()
 
 #### plot DensityScatter for filtered data ####
 d3 <- DensityScatter(filtered_lymph, x = 'nCount_RNA', y = 'TSS.enrichment', log_x = TRUE, quantiles = TRUE)
 svg(filename = "../results/nCount_RNA_vs_TSS_enrichment_filtered.svg",  width = 8, height = 6)
 d3
+dev.off()
 
 d4 <- DensityScatter(filtered_lymph, x = 'nCount_peaks', y = 'TSS.enrichment', log_x = TRUE, quantiles = TRUE)
 svg(filename = "../results/nCount_peaks_vs_TSS_enrichment_filtered.svg",  width = 8, height = 6)
 d4
+dev.off()
 
 saveRDS(filtered_lymph, file="../results/filtered_lymph_after_cleaned_peaks_final.rds") # save the filtered Seurat object
 fs::file_size("../results/filtered_lymph_after_cleaned_peaks_final.rds") 
@@ -315,6 +326,8 @@ filtered_lymph_sctransform <- RunUMAP(filtered_lymph_sctransform, reduction='pca
 dim1 <- DimPlot(filtered_lymph_sctransform , reduction = 'umap.rna_50', label = FALSE, repel = TRUE, label.size = 3) + NoLegend() # plot dimensionality reduction data for RNA.
 svg(filename = "../results/umap_rna_50.svg",  width = 8, height = 6)
 dim1
+dev.off()
+
 
 #### find top features
 DefaultAssay(filtered_lymph) <- "peaks"
@@ -330,6 +343,7 @@ filtered_lymph_sctransform <- RunUMAP(filtered_lymph_sctransform, reduction='lsi
 dim2 <- DimPlot(filtered_lymph_sctransform , reduction = 'umap.atac_50', label = FALSE, repel = TRUE, label.size = 3) + NoLegend() # plot dimensionality reduction data for ATAC.
 svg(filename = "../results/umap_atac_50.svg",  width = 8, height = 6)
 dim2
+dev.off()
 
 
 #### ----------------------------------------------------------------------------------------
@@ -354,7 +368,7 @@ filtered_lymph_sctransform <- RunUMAP(
 dim3 <- DimPlot(filtered_lymph_sctransform , reduction = 'wnn.umap_50', label = FALSE, repel = TRUE, label.size = 3) + NoLegend() # plot dimensionality reduction data for combined RNA and ATAC.
 svg(filename = "../results/wnn_umap_50.svg",  width = 8, height = 6)
 dim3
-
+dev.off()
 
 #### ----------------------------------------------------------------------------------------
 
@@ -431,31 +445,43 @@ to_plot <- c("MS4A1", "BANK1", "PAX5", 'CD19', 'CD22', 'NFATC1', 'TCF4', 'IRF8')
 feat1 <- FeaturePlot(filtered_lymph_sctransform, to_plot, reduction='umap.rna_50', label.size = 3) + NoLegend() # plot b-cell markers on RNA umap
 svg(filename = "../results/Bcell_markers_on_umap_rna_50.svg",  width = 12, height = 8)
 feat1
+dev.off()
+
 
 feat2 <- FeaturePlot(filtered_lymph_sctransform, to_plot, reduction='umap.atac_50', label.size = 3) + NoLegend() # plot b-cell markers on ATAC umap
 svg(filename = "../results/Bcell_markers_on_umap_atac_50.svg",  width = 12, height = 8)
 feat2
+dev.off()
+
 
 feat3 <- FeaturePlot(filtered_lymph_sctransform, to_plot, reduction='wnn.umap_50', label.size = 3) + NoLegend() # plot b-cell markers on combined RNA and ATAC umap
 svg(filename = "../results/Bcell_markers_on_combined_rna_atac_50.svg",  width = 12, height = 8)
 feat3
+dev.off()
+
 
 p5 <- VlnPlot(filtered_lymph_sctransform, features = to_plot)
 svg(filename = "../results/Bcell_markers_violin_plot.svg",  width = 12, height = 8)
+dev.off()
 
 
 #### plot umaps with annotations ####
 dim4 <- DimPlot(filtered_lymph_sctransform, reduction = "umap.rna_50", group.by = "predicted.id", label = TRUE, repel = TRUE, label.size = 3) # plot annotations on RNA umap
 svg(filename = "../results/umap_rna_50_with_annotations.svg",  width = 8, height = 6)
 dim4
+dev.off()
+
 
 dim5 <- DimPlot(filtered_lymph_sctransform, reduction = "umap.atac_50", group.by = "predicted.id", label = TRUE, repel = TRUE, label.size = 3) # plot annotations on ATAC umap
 svg(filename = "../results/umap_atac_50_with_annotations.svg",  width = 8, height = 6)
 dim5
+dev.off()
+
 
 dim6 <- DimPlot(filtered_lymph_sctransform, reduction = "wnn.umap_50", group.by = "predicted.id", label = TRUE, repel = TRUE, label.size = 3) # plot annotations on combined RNA and ATAC umap
 svg(filename = "../results/wnn_umap_50_with_annotations.svg",  width = 8, height = 6)
 dim6
+dev.off()
 
 
 #### ----------------------------------------------------------------------------------------
@@ -500,6 +526,7 @@ p3 <- CoveragePlot(
 pat1 <- patchwork::wrap_plots(p1, p3, ncol = 1)
 svg(filename = "../results/coverage_plots.svg",  width = 8, height = 12)
 pat1
+dev.off()
 
 
 #### ----------------------------------------------------------------------------------------
@@ -555,4 +582,7 @@ motif1 <-MotifPlot(
 )
 svg(filename = "../results/motif_plot.svg",  width = 8, height = 6)
 motif1
+dev.off()
+
+
 saveRDS(filtered_lymph_sctransform_with_motif, file="../results/final_capstone_project_data.rds")
